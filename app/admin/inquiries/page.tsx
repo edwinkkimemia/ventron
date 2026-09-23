@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Card, PageHeader, Pill, AutoSubmitSelect } from "@/components/admin/ui";
 import { updateInquiryStatus } from "../actions";
 
 const STATUSES = ["NEW", "CONTACTED", "QUOTED", "WON", "LOST", "ARCHIVED"];
@@ -6,24 +7,29 @@ const STATUSES = ["NEW", "CONTACTED", "QUOTED", "WON", "LOST", "ARCHIVED"];
 export default async function AdminInquiries() {
   let rows: any[] = [];
   try { rows = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" }, take: 100 }); } catch {}
+  const fresh = rows.filter((r) => r.status === "NEW").length;
   return (
-    <div>
-      <h1 className="font-condensed text-3xl font-semibold uppercase text-navy-900">Enquiries</h1>
-      <div className="mt-6 bg-white border border-steel-200 divide-y divide-steel-100">
+    <div className="space-y-6">
+      <PageHeader title="Enquiries" sub={`${rows.length} total • ${fresh} new — pipeline: New → Contacted → Quoted → Won/Lost`} />
+      <div className="space-y-3">
         {rows.length ? rows.map((r) => (
-          <div key={r.id} className="p-4 text-sm">
-            <div className="flex flex-wrap justify-between gap-2"><strong>{r.name} — {r.company}</strong><span className="text-xs text-steel-500">{new Date(r.createdAt).toLocaleString()}</span></div>
-            <div className="text-xs text-steel-500">{r.email} • {r.phone} • {r.service} • {r.industry} • {r.projectLocation}</div>
-            <p className="mt-1.5 text-charcoal-700">{r.message}</p>
-            <form action={updateInquiryStatus.bind(null, r.id)} className="mt-2 flex gap-2 items-center">
-              <select name="status" defaultValue={r.status} className="border text-xs px-2 py-1.5" onChange={(e) => (e.target.form as HTMLFormElement).requestSubmit()}>
-                {STATUSES.map((s) => <option key={s}>{s}</option>)}
-              </select>
-              <button className="hidden">save</button>
-              <span className="text-[11px] font-bold uppercase text-steel-500">Status: {r.status}</span>
-            </form>
-          </div>
-        )) : <div className="p-6 text-sm">No enquiries yet.</div>}
+          <Card key={r.id} className="p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-semibold text-navy-950">{r.name} {r.company && <span className="font-normal text-steel-500">— {r.company}</span>}</p>
+                <p className="text-xs text-steel-500 mt-0.5">{r.email}{r.phone ? ` • ${r.phone}` : ""} • {new Date(r.createdAt).toLocaleString()}</p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5 text-[11px] font-bold uppercase tracking-wider text-steel-500">
+                  {[r.service, r.industry, r.projectLocation].filter(Boolean).map((t) => <span key={t} className="bg-steel-100 rounded px-2 py-0.5">{t}</span>)}
+                </div>
+              </div>
+              <form action={updateInquiryStatus.bind(null, r.id)} className="flex items-center gap-2">
+                <Pill value={r.status} />
+                <AutoSubmitSelect name="status" defaultValue={r.status} options={STATUSES} />
+              </form>
+            </div>
+            <p className="mt-3 text-sm text-charcoal-700 leading-relaxed border-t border-steel-100 pt-3">{r.message}</p>
+          </Card>
+        )) : <Card className="p-10 text-center text-sm text-steel-500">No enquiries yet — contact form submissions land here.</Card>}
       </div>
     </div>
   );

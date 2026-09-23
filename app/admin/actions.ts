@@ -153,8 +153,230 @@ export async function saveStatistic(fd: FormData) {
   revalidatePath("/admin/settings");
 }
 
+import { redirect } from "next/navigation";
+
 export async function deleteStatistic(id: string) {
   await guard();
   await prisma.statistic.delete({ where: { id } });
   revalidatePath("/admin/settings");
+}
+
+const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
+const check = (fd: FormData, k: string) => fd.get(k) === "on";
+const opt = (v: string) => (v ? v : null);
+
+async function uniqueSlug(model: "project" | "article" | "job" | "service" | "industry" | "equipment", base: string, ignoreId?: string | null) {
+  let slug = slugify(base) || "item";
+  const where: any = { slug };
+  if (ignoreId) where.NOT = { id: ignoreId };
+  // @ts-expect-error dynamic model access
+  const exists = await prisma[model].findFirst({ where });
+  if (exists) slug = `${slug}-${Date.now().toString(36)}`;
+  return slug;
+}
+
+/* ---------------- Projects ---------------- */
+export async function upsertProject(id: string | null, fd: FormData) {
+  await guard();
+  const title = str(fd, "title");
+  if (!title) throw new Error("Title is required");
+  const slug = await uniqueSlug("project", str(fd, "slug") || title, id);
+  const data: any = {
+    title, slug,
+    excerpt: str(fd, "excerpt"),
+    description: str(fd, "description"),
+    challenge: opt(str(fd, "challenge")),
+    solution: opt(str(fd, "solution")),
+    scope: opt(str(fd, "scope")),
+    deliverables: opt(str(fd, "deliverables")),
+    location: str(fd, "location") || "Kenya",
+    client: str(fd, "client") || "Confidential Client",
+    year: Number(str(fd, "year")) || new Date().getFullYear(),
+    status: str(fd, "status") || "COMPLETED",
+    featured: check(fd, "featured"),
+    published: check(fd, "published"),
+    featuredImage: opt(str(fd, "featuredImage")),
+    industryId: opt(str(fd, "industryId")),
+    serviceId: opt(str(fd, "serviceId")),
+  };
+  if (id) await prisma.project.update({ where: { id }, data });
+  else await prisma.project.create({ data });
+  revalidatePath("/admin/projects");
+  revalidatePath("/projects");
+  revalidatePath("/");
+  redirect("/admin/projects");
+}
+
+/* ---------------- Articles ---------------- */
+export async function upsertArticle(id: string | null, fd: FormData) {
+  await guard();
+  const title = str(fd, "title");
+  if (!title) throw new Error("Title is required");
+  const slug = await uniqueSlug("article", str(fd, "slug") || title, id);
+  const published = check(fd, "published");
+  const session: any = await getServerSession(authOptions);
+  const data: any = {
+    title, slug,
+    excerpt: str(fd, "excerpt"),
+    content: str(fd, "content"),
+    categoryId: opt(str(fd, "categoryId")),
+    featuredImage: opt(str(fd, "featuredImage")),
+    tags: str(fd, "tags"),
+    metaTitle: opt(str(fd, "metaTitle")),
+    metaDescription: opt(str(fd, "metaDescription")),
+    authorName: session?.user?.name ?? "Ventron Engineering",
+    published,
+    publishedAt: published ? new Date() : null,
+  };
+  if (id) {
+    const cur = await prisma.article.findUnique({ where: { id } });
+    await prisma.article.update({ where: { id }, data: { ...data, publishedAt: published ? (cur?.publishedAt ?? new Date()) : null } });
+  } else {
+    await prisma.article.create({ data });
+  }
+  revalidatePath("/admin/articles");
+  revalidatePath("/insights");
+  revalidatePath("/");
+  redirect("/admin/articles");
+}
+
+/* ---------------- Jobs ---------------- */
+export async function upsertJob(id: string | null, fd: FormData) {
+  await guard();
+  const title = str(fd, "title");
+  if (!title) throw new Error("Title is required");
+  const slug = await uniqueSlug("job", str(fd, "slug") || title, id);
+  const closing = str(fd, "closingDate");
+  const data: any = {
+    title, slug,
+    location: str(fd, "location") || "Nairobi, Kenya",
+    department: str(fd, "department") || "Engineering",
+    employmentType: str(fd, "employmentType") || "Full-time",
+    description: str(fd, "description"),
+    requirements: str(fd, "requirements"),
+    closingDate: closing ? new Date(closing) : null,
+    published: check(fd, "published"),
+  };
+  if (id) await prisma.job.update({ where: { id }, data });
+  else await prisma.job.create({ data });
+  revalidatePath("/admin/jobs");
+  redirect("/admin/jobs");
+}
+
+export async function deleteJob(id: string) {
+  await guard();
+  await prisma.job.delete({ where: { id } });
+  revalidatePath("/admin/jobs");
+  redirect("/admin/jobs");
+}
+
+/* ---------------- Services ---------------- */
+export async function upsertService(id: string | null, fd: FormData) {
+  await guard();
+  const name = str(fd, "name");
+  if (!name) throw new Error("Name is required");
+  const slug = await uniqueSlug("service", str(fd, "slug") || name, id);
+  const data: any = {
+    name, slug,
+    tagline: opt(str(fd, "tagline")),
+    description: str(fd, "description"),
+    content: str(fd, "content"),
+    icon: str(fd, "icon") || "Cog",
+    image: opt(str(fd, "image")),
+    featured: check(fd, "featured"),
+    order: Number(str(fd, "order")) || 0,
+    published: check(fd, "published"),
+  };
+  if (id) await prisma.service.update({ where: { id }, data });
+  else await prisma.service.create({ data });
+  revalidatePath("/admin/services");
+  revalidatePath("/services");
+  revalidatePath("/");
+  redirect("/admin/services");
+}
+
+export async function deleteService(id: string) {
+  await guard();
+  await prisma.service.delete({ where: { id } });
+  revalidatePath("/admin/services");
+  redirect("/admin/services");
+}
+
+/* ---------------- Industries ---------------- */
+export async function upsertIndustry(id: string | null, fd: FormData) {
+  await guard();
+  const name = str(fd, "name");
+  if (!name) throw new Error("Name is required");
+  const slug = await uniqueSlug("industry", str(fd, "slug") || name, id);
+  const data: any = {
+    name, slug,
+    description: str(fd, "description"),
+    challenges: opt(str(fd, "challenges")),
+    systems: opt(str(fd, "systems")),
+    image: opt(str(fd, "image")),
+    order: Number(str(fd, "order")) || 0,
+  };
+  if (id) await prisma.industry.update({ where: { id }, data });
+  else await prisma.industry.create({ data });
+  revalidatePath("/admin/industries");
+  revalidatePath("/industries");
+  revalidatePath("/");
+  redirect("/admin/industries");
+}
+
+export async function deleteIndustry(id: string) {
+  await guard();
+  await prisma.industry.delete({ where: { id } });
+  revalidatePath("/admin/industries");
+  redirect("/admin/industries");
+}
+
+/* ---------------- Equipment ---------------- */
+export async function upsertEquipmentCategory(id: string | null, fd: FormData) {
+  await guard();
+  const name = str(fd, "name");
+  if (!name) throw new Error("Name is required");
+  const data: any = { name, description: opt(str(fd, "description")), order: Number(str(fd, "order")) || 0 };
+  if (!id) {
+    const slug = slugify(name) + "-" + Date.now().toString(36);
+    await prisma.equipmentCategory.create({ data: { ...data, slug } });
+  } else {
+    await prisma.equipmentCategory.update({ where: { id }, data });
+  }
+  revalidatePath("/admin/equipment");
+  revalidatePath("/equipment");
+  redirect("/admin/equipment");
+}
+
+export async function deleteEquipmentCategory(id: string) {
+  await guard();
+  await prisma.equipmentCategory.delete({ where: { id } });
+  revalidatePath("/admin/equipment");
+  redirect("/admin/equipment");
+}
+
+export async function upsertEquipment(id: string | null, fd: FormData) {
+  await guard();
+  const name = str(fd, "name");
+  if (!name) throw new Error("Name is required");
+  const slug = await uniqueSlug("equipment", str(fd, "slug") || name, id);
+  const data: any = {
+    name, slug,
+    description: str(fd, "description"),
+    categoryId: opt(str(fd, "categoryId")),
+    image: opt(str(fd, "image")),
+    published: check(fd, "published"),
+  };
+  if (id) await prisma.equipment.update({ where: { id }, data });
+  else await prisma.equipment.create({ data });
+  revalidatePath("/admin/equipment");
+  revalidatePath("/equipment");
+  redirect("/admin/equipment");
+}
+
+export async function deleteEquipment(id: string) {
+  await guard();
+  await prisma.equipment.delete({ where: { id } });
+  revalidatePath("/admin/equipment");
+  redirect("/admin/equipment");
 }

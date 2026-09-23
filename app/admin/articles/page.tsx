@@ -1,31 +1,35 @@
 import { prisma } from "@/lib/prisma";
-import { createArticle, toggleArticle, deleteArticle } from "../actions";
+import { Card, PageHeader, Pill, BtnLink, DeleteButton, BtnPrimary, EmptyState } from "@/components/admin/ui";
+import { deleteArticle, toggleArticle } from "../actions";
 
 export default async function AdminArticles() {
   let rows: any[] = [];
-  try { rows = await prisma.article.findMany({ orderBy: { createdAt: "desc" } }); } catch {}
+  try { rows = await prisma.article.findMany({ orderBy: { createdAt: "desc" }, include: { category: true } }); } catch {}
   return (
-    <div>
-      <h1 className="font-condensed text-3xl font-semibold uppercase text-navy-900">Insights</h1>
-      <div className="mt-6 grid lg:grid-cols-3 gap-6">
-        <form action={createArticle} className="bg-white border p-5 grid gap-3 h-fit">
-          <h2 className="font-bold text-sm uppercase tracking-widest">New article</h2>
-          <input name="title" required placeholder="Title" className="border px-3 py-2 text-sm" />
-          <input name="excerpt" required placeholder="Excerpt / meta description" className="border px-3 py-2 text-sm" />
-          <textarea name="content" required placeholder="Body content" rows={5} className="border px-3 py-2 text-sm" />
-          <label className="text-sm flex gap-2 items-center"><input type="checkbox" name="published" /> Publish now</label>
-          <button className="bg-navy-900 text-white text-sm font-bold uppercase tracking-widest py-2.5">Save</button>
-        </form>
-        <div className="lg:col-span-2 bg-white border divide-y">
-          {rows.length ? rows.map((a) => (
-            <div key={a.id} className="p-4 text-sm flex justify-between gap-3"><span><strong>{a.title}</strong><span className="text-steel-500"> — {a.published ? "Live" : "Draft"}</span></span>
-              <span className="flex gap-2">
-                <form action={toggleArticle.bind(null, a.id)}><button className="border px-2.5 py-1.5 text-xs font-bold">Toggle</button></form>
-                <form action={deleteArticle.bind(null, a.id)}><button className="border border-accent text-accent px-2.5 py-1.5 text-xs font-bold">Delete</button></form>
-              </span></div>
-          )) : <div className="p-5 text-sm">No articles.</div>}
-        </div>
-      </div>
+    <div className="space-y-6">
+      <PageHeader title="Insights" sub={`${rows.length} articles — published posts appear on the site with SEO metadata`} action={<BtnPrimary href="/admin/articles/new">+ New article</BtnPrimary>} />
+      {rows.length ? (
+        <Card>
+          <div className="divide-y divide-steel-100">
+            {rows.map((a) => (
+              <div key={a.id} className="flex flex-wrap items-center gap-4 p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {a.featuredImage ? <img src={a.featuredImage} alt="" className="h-12 w-20 rounded object-cover border border-steel-200" /> : <div className="h-12 w-20 rounded bg-steel-100 grid place-items-center text-[10px] font-bold text-steel-400">NO IMG</div>}
+                <div className="flex-1 min-w-[200px]">
+                  <p className="font-semibold text-navy-950">{a.title}</p>
+                  <p className="text-xs text-steel-500 mt-0.5">/{a.slug} • {a.category?.name ?? "Uncategorised"} • {a.authorName}</p>
+                </div>
+                <Pill value={a.published} live="Live" />
+                <div className="flex items-center gap-2">
+                  <BtnLink href={`/admin/articles/${a.id}/edit`}>Edit</BtnLink>
+                  <form action={toggleArticle.bind(null, a.id)}><button className="px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-md border border-steel-300 hover:border-navy-900">{a.published ? "Unpublish" : "Publish"}</button></form>
+                  <DeleteButton action={deleteArticle.bind(null, a.id)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : <EmptyState title="No articles yet" sub="Write your first technical insight" action={<BtnPrimary href="/admin/articles/new">+ New article</BtnPrimary>} />}
     </div>
   );
 }

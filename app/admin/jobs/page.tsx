@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { createJob, toggleJob } from "../actions";
+import { Card, PageHeader, Pill, BtnLink, DeleteButton, BtnPrimary, EmptyState } from "@/components/admin/ui";
+import { deleteJob, toggleJob } from "../actions";
 
 export default async function AdminJobs() {
   let jobs: any[] = [];
@@ -9,34 +10,40 @@ export default async function AdminJobs() {
     apps = await prisma.jobApplication.findMany({ orderBy: { createdAt: "desc" }, take: 50, include: { job: true } });
   } catch {}
   return (
-    <div>
-      <h1 className="font-condensed text-3xl font-semibold uppercase text-navy-900">Careers</h1>
-      <div className="mt-6 grid lg:grid-cols-3 gap-6">
-        <form action={createJob} className="bg-white border border-steel-200 p-5 grid gap-3 h-fit">
-          <h2 className="font-bold text-sm uppercase tracking-widest">New role</h2>
-          <input name="title" required placeholder="Job title" className="border px-3 py-2 text-sm" />
-          <input name="location" placeholder="Location" className="border px-3 py-2 text-sm" />
-          <div className="grid grid-cols-2 gap-2">
-            <input name="department" placeholder="Department" className="border px-3 py-2 text-sm" />
-            <input name="employmentType" placeholder="Type" className="border px-3 py-2 text-sm" />
-          </div>
-          <textarea name="description" required placeholder="Description" rows={3} className="border px-3 py-2 text-sm" />
-          <textarea name="requirements" required placeholder="Requirements" rows={3} className="border px-3 py-2 text-sm" />
-          <button className="bg-navy-900 text-white text-sm font-bold uppercase tracking-widest py-2.5">Create</button>
-        </form>
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border divide-y">
-            {jobs.length ? jobs.map((j) => (
-              <div key={j.id} className="p-4 text-sm flex justify-between gap-3"><span><strong>{j.title}</strong><span className="text-steel-500"> — {j.published ? "Open" : "Closed"}</span></span>
-                <form action={toggleJob.bind(null, j.id)}><button className="border px-2.5 py-1.5 text-xs font-bold">Toggle</button></form></div>
-            )) : <div className="p-5 text-sm">No jobs.</div>}
-          </div>
-          <div className="bg-white border">
-            <div className="bg-navy-900 px-4 py-2.5 text-white text-sm font-condensed uppercase tracking-widest">Applications ({apps.length})</div>
-            {apps.map((a) => <div key={a.id} className="p-3.5 text-sm border-b border-steel-100"><strong>{a.name}</strong> → {a.job?.title} <span className="text-steel-500">({a.email}{a.cvUrl ? ` • CV: ${a.cvUrl}` : ""})</span></div>)}
-          </div>
+    <div className="space-y-6">
+      <PageHeader title="Careers" sub={`${jobs.length} roles • ${apps.length} applications`} action={<BtnPrimary href="/admin/jobs/new">+ New role</BtnPrimary>} />
+      <Card>
+        <div className="px-5 py-3 border-b border-steel-100 font-condensed text-sm font-semibold uppercase tracking-widest text-navy-950">Open roles</div>
+        <div className="divide-y divide-steel-100">
+          {jobs.length ? jobs.map((j) => (
+            <div key={j.id} className="flex flex-wrap items-center gap-4 p-4">
+              <div className="flex-1 min-w-[200px]">
+                <p className="font-semibold text-navy-950">{j.title}</p>
+                <p className="text-xs text-steel-500 mt-0.5">{j.location} • {j.department} • {j.employmentType}</p>
+              </div>
+              <Pill value={j.published} live="Open" />
+              <div className="flex items-center gap-2">
+                <BtnLink href={`/admin/jobs/${j.id}/edit`}>Edit</BtnLink>
+                <form action={toggleJob.bind(null, j.id)}><button className="px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-md border border-steel-300 hover:border-navy-900">{j.published ? "Close" : "Open"}</button></form>
+                <DeleteButton action={deleteJob.bind(null, j.id)} />
+              </div>
+            </div>
+          )) : <div className="p-5"><EmptyState title="No roles yet" sub="Create the first opening" /></div>}
         </div>
-      </div>
+      </Card>
+      <Card>
+        <div className="px-5 py-3 border-b border-steel-100 font-condensed text-sm font-semibold uppercase tracking-widest text-navy-950">Recent applications ({apps.length})</div>
+        <div className="divide-y divide-steel-100">
+          {apps.length ? apps.map((a) => (
+            <div key={a.id} className="px-5 py-3.5 text-sm">
+              <strong className="text-navy-950">{a.name}</strong> → {a.job?.title ?? "Deleted role"}
+              <span className="text-steel-500"> • {a.email}{a.phone ? ` • ${a.phone}` : ""}</span>
+              {a.cvUrl && <a href={a.cvUrl} target="_blank" className="ml-2 text-xs font-bold uppercase tracking-wider text-accent">CV ↗</a>}
+              {a.coverLetter && <p className="mt-1 text-charcoal-700 line-clamp-2">{a.coverLetter}</p>}
+            </div>
+          )) : <p className="px-5 py-6 text-sm text-steel-500">No applications yet.</p>}
+        </div>
+      </Card>
     </div>
   );
 }
