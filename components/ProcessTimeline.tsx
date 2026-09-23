@@ -15,12 +15,12 @@ export default function ProcessTimeline() {
           </div>
         ))}
       </div>
-      {/* Mobile vertical */}
-      <ol className="md:hidden relative border-l-2 border-navy-900 ml-2 space-y-4">
+      {/* Mobile two-column grid */}
+      <ol className="md:hidden grid grid-cols-2 gap-3">
         {STEPS.map((s, i) => (
-          <li key={s} className="ml-4 bg-white border border-steel-200 p-4">
+          <li key={s} className={`bg-white border border-steel-200 border-t-4 p-4 ${i === 0 ? "border-t-navy-900" : i === STEPS.length - 1 ? "border-t-accent col-span-2" : "border-t-steel-300"}`}>
             <span className="text-xs font-bold text-accent">{String(i + 1).padStart(2, "0")}</span>
-            <div className="font-condensed font-semibold uppercase text-navy-900">{s}</div>
+            <div className="font-condensed font-semibold uppercase text-navy-900 leading-snug">{s}</div>
           </li>
         ))}
       </ol>
