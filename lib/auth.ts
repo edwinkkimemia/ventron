@@ -11,7 +11,22 @@ export const authOptions: NextAuthOptions = {
       credentials: { email: { label: "Email", type: "email" }, password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({ where: { email: credentials.email.toLowerCase() } });
+        const email = credentials.email.toLowerCase();
+        let user = await prisma.user.findUnique({ where: { email } });
+        // Bootstrap: if no matching user exists yet and the credentials match
+        // the ADMIN_EMAIL / ADMIN_PASSWORD env pair, provision the super admin
+        // on first login (avoids needing a seed run on fresh deploys).
+        const envEmail = (process.env.ADMIN_EMAIL ?? "").toLowerCase().trim();
+        const envPass = process.env.ADMIN_PASSWORD ?? "";
+        if (!user && envEmail && envPass.length >= 8 && email === envEmail && credentials.password === envPass) {
+          const hash = await bcrypt.hash(envPass, 12);
+          user = await prisma.user.upsert({
+            where: { email: envEmail },
+            update: { passwordHash: hash, role: "SUPER_ADMIN" },
+            create: { name: "Ventron Admin", email: envEmail, passwordHash: hash, role: "SUPER_ADMIN" },
+          });
+          return { id: user.id, name: user.name, email: user.email, role: user.role } as any;
+        }
         if (!user) return null;
         const ok = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!ok) return null;

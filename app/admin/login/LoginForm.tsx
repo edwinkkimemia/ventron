@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 function LoginFormInner() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const [checking, setChecking] = useState(true);
   const router = useRouter();
   const params = useSearchParams();
@@ -56,7 +58,12 @@ function LoginFormInner() {
         <label className="block mt-5 text-[11px] font-bold uppercase tracking-widest text-steel-500">Email</label>
         <input name="email" type="email" required autoComplete="username" placeholder="you@ventronltd.com" className="mt-1.5 w-full border border-steel-300 px-3.5 py-2.5 text-sm outline-none focus:border-navy-900" />
         <label className="block mt-3 text-[11px] font-bold uppercase tracking-widest text-steel-500">Password</label>
-        <input name="password" type="password" required autoComplete="current-password" placeholder="••••••••" className="mt-1.5 w-full border border-steel-300 px-3.5 py-2.5 text-sm outline-none focus:border-navy-900" />
+        <div className="relative mt-1.5">
+          <input name="password" type={show ? "text" : "password"} required autoComplete="current-password" placeholder="••••••••" className="w-full border border-steel-300 px-3.5 py-2.5 pr-11 text-sm outline-none focus:border-navy-900" />
+          <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-steel-500 hover:text-navy-900">
+            {show ? <EyeOff size={17} /> : <Eye size={17} />}
+          </button>
+        </div>
         {err && <p className="mt-3 text-sm font-semibold text-red-700">{err}</p>}
         <button disabled={loading} className="mt-5 w-full bg-navy-900 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-navy-800 disabled:opacity-60">{loading ? "Signing in…" : "Sign in"}</button>
         <Link href="/" className="mt-4 block text-center text-xs font-bold uppercase tracking-widest text-steel-500 hover:text-navy-900">← Back to website</Link>
