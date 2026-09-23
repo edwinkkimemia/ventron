@@ -37,8 +37,8 @@ const config: Config = {
         safety: { DEFAULT: "#E67E1A" },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        condensed: ["var(--font-display)", "var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "-apple-system", "'Segoe UI'", "Roboto", "sans-serif"],
+        condensed: ["var(--font-display)", "'Arial Narrow'", "var(--font-inter)", "system-ui", "sans-serif"],
       },
     },
   },

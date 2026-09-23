@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: 'Inter', system-ui, sans-serif;
-  --font-display: 'Archivo', 'Inter', system-ui, sans-serif;
+  --font-inter: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Archivo', 'Archivo Narrow', 'Arial Narrow', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 html { scroll-behavior: smooth; }
-body { @apply bg-white text-charcoal-900 antialiased; font-family: var(--font-inter); }
+body { @apply bg-white text-charcoal-900 antialiased; font-family: var(--font-inter); text-rendering: optimizeLegibility; }
 
 .font-condensed { font-family: var(--font-display); }
 
