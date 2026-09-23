@@ -10,6 +10,28 @@ async function guard() {
   if (!s) throw new Error("Unauthorized");
 }
 
+async function guardAdmin() {
+  const s: any = await getServerSession(authOptions);
+  if (!s || (s.user?.role !== "SUPER_ADMIN" && s.user?.role !== "ADMIN")) throw new Error("Forbidden");
+}
+
+// One-click starter content for fresh deploys (no shell on Vercel).
+// Upserts only — safe to run repeatedly, never duplicates.
+export async function seedStarterContent(): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await guardAdmin();
+    const { seedDatabase } = await import("@/lib/seed-content");
+    await seedDatabase();
+    revalidatePath("/admin");
+    revalidatePath("/admin/projects");
+    revalidatePath("/admin/articles");
+    revalidatePath("/admin/settings");
+    return { ok: true };
+  } catch (e: any) {
+    return { ok: false, error: e?.message ?? "Seeding failed" };
+  }
+}
+
 export async function updateInquiryStatus(id: string, formData: FormData) {
   await guard();
   const status = String(formData.get("status") ?? "NEW") as any;
