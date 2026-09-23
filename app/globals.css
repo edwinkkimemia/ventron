@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-display: 'Archivo', 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-white text-charcoal-900 antialiased; font-family: var(--font-inter); }
+
+.font-condensed { font-family: var(--font-display); }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+.spec-table td, .spec-table th { @apply border border-steel-200 px-3 py-2 text-sm; }
+.prose-eng h2 { @apply font-condensed text-2xl font-semibold uppercase tracking-wide text-navy-900 mt-8 mb-3; }
+.prose-eng h3 { @apply text-lg font-semibold text-navy-900 mt-6 mb-2; }
+.prose-eng p { @apply text-charcoal-700 leading-relaxed mb-4; }
+.prose-eng ul { @apply list-disc pl-6 mb-4 text-charcoal-700; }

@@ -1,0 +1,256 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  WON
+  LOST
+  ARCHIVED
+}
+
+enum ProjectStatus {
+  COMPLETED
+  ONGOING
+  DESIGN
+  CONCEPT
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(EDITOR)
+  articles     Article[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  tagline     String?
+  description String
+  content     String    @db.Text
+  icon        String    @default("Cog")
+  image       String?
+  featured    Boolean   @default(false)
+  order       Int       @default(0)
+  published   Boolean   @default(true)
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Industry {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String    @db.Text
+  challenges  String?   @db.Text
+  systems     String?   @db.Text
+  image       String?
+  order       Int       @default(0)
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  excerpt        String
+  description    String        @db.Text
+  challenge      String?       @db.Text
+  solution       String?       @db.Text
+  scope          String?       @db.Text
+  deliverables   String?       @db.Text
+  location       String
+  client         String        @default("Confidential Client")
+  year           Int
+  status         ProjectStatus @default(COMPLETED)
+  featured       Boolean       @default(false)
+  published      Boolean       @default(true)
+  featuredImage  String?
+  industryId     String?
+  industry       Industry?     @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  serviceId      String?
+  service        Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  images         ProjectImage[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([featured, published])
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  altText   String?
+  order     Int     @default(0)
+}
+
+model ArticleCategory {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  articles Article[]
+}
+
+model Article {
+  id              String           @id @default(cuid())
+  title           String
+  slug            String           @unique
+  excerpt         String
+  content         String           @db.Text
+  categoryId      String?
+  category        ArticleCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  featuredImage   String?
+  published       Boolean          @default(false)
+  featured        Boolean          @default(false)
+  authorId        String?
+  author          User?            @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorName      String           @default("Ventron Engineering")
+  metaTitle       String?
+  metaDescription String?
+  tags            String           @default("")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  publishedAt     DateTime?
+
+  @@index([slug])
+  @@index([published])
+}
+
+model Inquiry {
+  id              String        @id @default(cuid())
+  name            String
+  company         String?
+  email           String
+  phone           String?
+  service         String?
+  industry        String?
+  projectLocation String?
+  message         String        @db.Text
+  status          InquiryStatus @default(NEW)
+  createdAt       DateTime      @default(now())
+}
+
+model QuoteRequest {
+  id          String        @id @default(cuid())
+  name        String
+  company     String?
+  email       String
+  phone       String
+  location    String?
+  industry    String?
+  service     String
+  description String        @db.Text
+  timeline    String?
+  budget      String?
+  notes       String?       @db.Text
+  status      InquiryStatus @default(NEW)
+  attachments QuoteAttachment[]
+  createdAt   DateTime      @default(now())
+}
+
+model QuoteAttachment {
+  id             String       @id @default(cuid())
+  quoteRequestId String
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  fileName       String
+  fileUrl        String
+  mimeType       String
+  size           Int          @default(0)
+}
+
+model Job {
+  id             String           @id @default(cuid())
+  title          String
+  slug           String           @unique
+  location       String           @default("Nairobi, Kenya")
+  department     String           @default("Engineering")
+  employmentType String           @default("Full-time")
+  description    String           @db.Text
+  requirements   String           @db.Text
+  closingDate    DateTime?
+  published      Boolean          @default(true)
+  applications   JobApplication[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model JobApplication {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name        String
+  email       String
+  phone       String?
+  cvUrl       String?
+  coverLetter String?  @db.Text
+  linkedIn    String?
+  createdAt   DateTime @default(now())
+}
+
+model EquipmentCategory {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String?     @db.Text
+  order       Int         @default(0)
+  equipment   Equipment[]
+}
+
+model Equipment {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  description String            @db.Text
+  categoryId  String?
+  category    EquipmentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  image       String?
+  published   Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+}
+
+model Statistic {
+  id     String @id @default(cuid())
+  label  String
+  value  String
+  suffix String @default("")
+  order  Int    @default(0)
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

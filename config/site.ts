@@ -1,0 +1,28 @@
+export const siteConfig = {
+  name: "Ventron Mechanical Systems Ltd",
+  tagline: "Your Vision, Our Engineering.",
+  email: "info@ventronltd.com",
+  phone: "+254 797 467 020",
+  phoneHref: "tel:+254797467020",
+  whatsapp: "https://wa.me/254797467020",
+  address: "Nairobi, Kenya",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com",
+  nav: [
+    { label: "Industries", href: "/industries" },
+    { label: "Projects", href: "/projects" },
+    { label: "Capabilities", href: "/capabilities" },
+    { label: "Equipment", href: "/equipment" },
+    { label: "Insights", href: "/insights" },
+    { label: "Contact", href: "/contact" },
+  ],
+  servicesMenu: [
+    { label: "Mechanical Engineering", href: "/services/mechanical-engineering" },
+    { label: "Oil & Gas Engineering", href: "/services/oil-gas-engineering" },
+    { label: "Fire Protection Engineering", href: "/services/fire-protection-engineering" },
+    { label: "Process & Piping Engineering", href: "/services/process-piping-engineering" },
+    { label: "Engineering Consultancy", href: "/services/engineering-consultancy" },
+    { label: "Procurement", href: "/services/procurement" },
+    { label: "Project Management", href: "/services/project-management" },
+    { label: "QA/QC", href: "/services/qa-qc" },
+  ],
+};
