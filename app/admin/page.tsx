@@ -12,14 +12,16 @@ export default async function AdminHome() {
   if (!session) redirect("/admin/login");
   let counts = { projects: 0, inquiries: 0, quotes: 0, jobs: 0, articles: 0, newInq: 0 };
   let recent: any[] = [];
+  let dbOk = true;
   try {
+    await prisma.$queryRaw`SELECT 1`;
     const [projects, inquiries, quotes, jobs, articles, newInq] = await Promise.all([
       prisma.project.count(), prisma.inquiry.count(), prisma.quoteRequest.count(),
       prisma.job.count(), prisma.article.count(), prisma.inquiry.count({ where: { status: "NEW" } }),
     ]);
     counts = { projects, inquiries, quotes, jobs, articles, newInq };
     recent = await prisma.inquiry.findMany({ take: 5, orderBy: { createdAt: "desc" } });
-  } catch {}
+  } catch { dbOk = false; }
   const empty = counts.projects === 0 && counts.articles === 0;
   const cards = [
     ["Projects", counts.projects, "/admin/projects", FolderKanban],
@@ -37,6 +39,12 @@ export default async function AdminHome() {
         sub={`Welcome back, ${(session.user as any)?.name ?? "Engineer"} — ${new Date().toLocaleDateString("en-KE", { weekday: "long", day: "numeric", month: "long" })}`}
         action={<BtnPrimary href="/admin/projects/new">+ New project</BtnPrimary>}
       />
+      {!dbOk && (
+        <div className="bg-red-50 border border-red-300 rounded-lg p-5">
+          <h2 className="font-condensed font-semibold uppercase tracking-wide text-red-800">Database unreachable</h2>
+          <p className="text-sm text-red-700 mt-1">Cannot reach the Postgres server. Check that <code>DATABASE_URL</code> is correct and the database is running (Prisma Postgres instances pause when idle — resume it in the Prisma dashboard). Public pages keep working from built-in content; admin data, forms and login need the database.</p>
+        </div>
+      )}
       {empty && (
         <form action={async () => { "use server"; await seedStarterContent(); }} className="bg-gradient-to-r from-navy-950 to-navy-800 rounded-lg p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between shadow">
           <div>
