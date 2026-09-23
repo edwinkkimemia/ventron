@@ -4,6 +4,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import CTASection from "@/components/CTASection";
 import { prisma } from "@/lib/prisma";
 import { FALLBACK_ARTICLES, readMinutes } from "@/lib/insights-fallback";
+import { SERVICES_RICH } from "@/lib/services-content";
+import ShareButtons from "@/components/ShareButtons";
 import { baseMetadata } from "@/lib/seo";
 
 function fallbackBySlug(slug: string) {
@@ -81,12 +83,31 @@ export default async function InsightDetail({ params }: { params: { slug: string
         </div>
       </section>
       <article className="bg-white">
-        <div className="mx-auto max-w-3xl px-4 md:px-6 py-12">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 py-12 grid lg:grid-cols-3 gap-10 items-start">
+          <div className="lg:col-span-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {a.featuredImage && <img src={a.featuredImage} alt={a.title} className="w-full h-72 object-cover mb-8 border border-steel-200" />}
           <div className="prose-eng"><ArticleBody content={a.content} /></div>
           {a.tags && <p className="mt-8 text-xs uppercase tracking-widest text-steel-500">Tagged: {a.tags}</p>}
-          <div className="mt-8 border border-steel-200 bg-steel-100/60 p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          </div>
+          <aside className="space-y-4 lg:sticky lg:top-28">
+            <div className="border border-steel-200 p-5">
+              <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-navy-900">Share this article</h2>
+              <div className="mt-3"><ShareButtons url={`${(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com").replace(/\/$/, "")}/insights/${a.slug}`} title={a.title} /></div>
+            </div>
+            <div className="bg-navy-950 p-6">
+              <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-white">Our engineering services</h2>
+              <ul className="mt-3 space-y-1">
+                {Object.entries(SERVICES_RICH).map(([slug, s]) => (
+                  <li key={slug}><Link href={`/services/${slug}`} className="block py-1.5 text-sm font-semibold text-steel-200 hover:text-white border-b border-white/10">→ {s.name}</Link></li>
+                ))}
+              </ul>
+              <Link href="/quote" className="mt-4 inline-block bg-accent hover:bg-accent-dark text-white text-xs font-bold uppercase tracking-widest px-5 py-2.5">Discuss Your Project</Link>
+            </div>
+          </aside>
+        </div>
+        <div className="mx-auto max-w-7xl px-4 md:px-6 pb-12">
+          <div className="border border-steel-200 bg-steel-100/60 p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
               <h2 className="font-condensed font-semibold uppercase text-navy-900">Need this engineered for your site?</h2>
               <p className="text-sm text-charcoal-700 mt-1">Send drawings, layouts or a scope note — we respond with a scoped proposal.</p>
