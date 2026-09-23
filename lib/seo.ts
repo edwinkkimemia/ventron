@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com";
+const _raw = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim();
+const SITE_URL = _raw.startsWith("http") ? _raw : "https://ventronltd.com";
 
 export function baseMetadata(opts: { title: string; description: string; path?: string; image?: string }): Metadata {
   const url = `${SITE_URL}${opts.path ?? ""}`;

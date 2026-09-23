@@ -6,8 +6,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const archivo = Archivo({ subsets: ["latin"], variable: "--font-display", weight: ["500", "600", "700", "800"], display: "swap" });
 
+const rawSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim();
+const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : "https://ventronltd.com";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com"),
+  metadataBase: new URL(siteUrl),
   title: { default: "Ventron Mechanical Systems Ltd | Your Vision, Our Engineering", template: "%s | Ventron Mechanical Systems Ltd" },
   description: "Engineering, procurement, fire protection, oil & gas, LPG and industrial solutions across Kenya and East Africa.",
   icons: { icon: "/fav.jpg", apple: "/fav.jpg" },
