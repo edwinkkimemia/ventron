@@ -18,7 +18,7 @@ Admin: `/admin` → login with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`.
 
 ## Deploy (Vercel + pooled Postgres)
 
-1. Create DB (Neon/Supabase) — use pooled connection string for `DATABASE_URL`, direct for `DIRECT_URL`.
+1. Create DB (Neon/Supabase) — set the connection string as `DATABASE_URL` (for pooled hosts, append `?pgbouncer=true`).
 2. Vercel → import repo → set env vars from `.env.example`.
 3. Build command: `prisma generate && next build` (already in `package.json`).
 4. Run migrations: `prisma migrate deploy`, then seed once.
