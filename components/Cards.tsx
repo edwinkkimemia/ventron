@@ -3,16 +3,20 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import * as icons from "lucide-react";
 
 const FALLBACK_IMG: Record<string, string> = {
-  "mechanical-engineering": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&q=80",
-  "oil-gas-engineering": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
-  "fire-protection-engineering": "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=800&q=80",
-  "process-piping-engineering": "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?w=800&q=80",
+  "mechanical-engineering": "/mechanical.jpg",
+  "oil-gas-engineering": "/oil.jpg",
+  "fire-protection-engineering": "/fire.jpg",
+  "process-piping-engineering": "/petrol-storage.jpg",
+  "engineering-consultancy": "/industrial.jpg",
+  "procurement": "/procurement.jpg",
+  "project-management": "/commercial.jpg",
+  "qa-qc": "/utilities.jpg",
 };
 
 export function imgFor(slug?: string | null, custom?: string | null) {
   if (custom) return custom;
   if (slug && FALLBACK_IMG[slug]) return FALLBACK_IMG[slug];
-  return "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80";
+  return "/industrial.jpg";
 }
 
 export function ServiceCard({ service }: { service: any }) {

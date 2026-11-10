@@ -8,7 +8,7 @@ import { FALLBACK_PROJECTS } from "./projects-fallback";
 
 export async function seedDatabase() {
   // --- Admin user (password synced on every run) ---
-  const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@ventronltd.com").toLowerCase().trim();
+  const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@ventronltd.co.ke").toLowerCase().trim();
   const adminPassword = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
   const passwordHash = await bcrypt.hash(adminPassword, 12);
   await prisma.user.upsert({
