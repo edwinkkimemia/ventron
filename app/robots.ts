@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const URL = (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.com";
+  const URL = (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.co.ke";
   return { rules: [{ userAgent: "*", allow: "/", disallow: ["/admin/", "/api/"] }], sitemap: `${URL}/sitemap.xml` };
 }

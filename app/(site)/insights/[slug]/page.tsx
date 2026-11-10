@@ -93,7 +93,7 @@ export default async function InsightDetail({ params }: { params: { slug: string
           <aside className="space-y-4 lg:sticky lg:top-28">
             <div className="border border-steel-200 p-5">
               <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-navy-900">Share this article</h2>
-              <div className="mt-3"><ShareButtons url={`${((process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.com")}/insights/${a.slug}`} title={a.title} /></div>
+              <div className="mt-3"><ShareButtons url={`${((process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.co.ke")}/insights/${a.slug}`} title={a.title} /></div>
             </div>
             <div className="bg-navy-950 p-6">
               <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-white">Our engineering services</h2>

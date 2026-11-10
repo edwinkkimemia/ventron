@@ -11,7 +11,7 @@ import { organizationSchema } from "@/lib/seo";
 import "./globals.css";
 
 const rawSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim();
-const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : "https://ventronltd.com";
+const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : "https://ventronltd.co.ke";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

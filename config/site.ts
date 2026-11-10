@@ -6,7 +6,7 @@ export const siteConfig = {
   phoneHref: "tel:+44180707774",
   whatsapp: "https://wa.me/441807077774",
   address: "Nairobi, Kenya",
-  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.com",
+  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.co.ke",
   nav: [
     { label: "Industries", href: "/industries" },
     { label: "Projects", href: "/projects" },
