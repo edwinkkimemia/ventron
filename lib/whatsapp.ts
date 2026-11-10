@@ -1,7 +1,7 @@
 // Page-specific prefilled WhatsApp messages. Pure helpers — safe for
 // both server and client components.
 
-const NUMBER = "254797467020";
+const NUMBER = "44180707774";
 
 function link(msg: string) {
   return `https://wa.me/${NUMBER}?text=${encodeURIComponent(msg)}`;

@@ -68,8 +68,8 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-navy-950/60" />
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/40 to-navy-950/0" />
         </div>
-        <div className="relative flex items-center min-h-[540px] md:min-h-[70vh]">
-          <div className="w-full mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-24">
+        <div className="relative flex items-center min-h-[calc(100svh-12rem)]">
+          <div className="w-full mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-12">
             <div className="max-w-3xl">
               <div className="flex items-center gap-3">
                 <span className="h-[3px] w-12 bg-accent" />

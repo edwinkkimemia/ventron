@@ -21,8 +21,8 @@ export default function ContactPage() {
     <>
       <section className="bg-navy-950 relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/hero.png" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40" />
+        <img src="/hero.png" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/60 to-navy-950/15" />
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-14">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
           <h1 className="font-condensed mt-4 text-4xl md:text-5xl font-semibold uppercase text-white">Contact Engineering</h1>

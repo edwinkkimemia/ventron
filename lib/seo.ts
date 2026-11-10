@@ -29,7 +29,7 @@ export function organizationSchema() {
     slogan: "Your Vision, Our Engineering.",
     url: SITE_URL,
     email: "info@ventronltd.com",
-    telephone: "+254797467020",
+    telephone: "+44180707774",
     address: { "@type": "PostalAddress", addressLocality: "Nairobi", addressCountry: "KE" },
     areaServed: ["Kenya", "East Africa"],
   };

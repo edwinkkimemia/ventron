@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { FALLBACK_ARTICLES } from "@/lib/insights-fallback";
 
-const URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com";
+const URL = (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = ["", "/about", "/services", "/industries", "/projects", "/capabilities", "/equipment", "/hse", "/quality", "/insights", "/contact", "/quote"];

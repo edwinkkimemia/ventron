@@ -73,8 +73,8 @@ export default async function InsightDetail({ params }: { params: { slug: string
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <section className="relative bg-navy-950 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {a.featuredImage && <img src={a.featuredImage} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-20" />}
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-transparent" />
+        {a.featuredImage && <img src={a.featuredImage} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-50" />}
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/55 to-transparent" />
         <div className="relative mx-auto max-w-3xl px-4 md:px-6 py-12">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: a.category?.name ?? "Article" }]} />
           <span className="text-[11px] font-bold uppercase tracking-widest text-accent-light">{a.category?.name}</span>
@@ -93,7 +93,7 @@ export default async function InsightDetail({ params }: { params: { slug: string
           <aside className="space-y-4 lg:sticky lg:top-28">
             <div className="border border-steel-200 p-5">
               <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-navy-900">Share this article</h2>
-              <div className="mt-3"><ShareButtons url={`${(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ventronltd.com").replace(/\/$/, "")}/insights/${a.slug}`} title={a.title} /></div>
+              <div className="mt-3"><ShareButtons url={`${((process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.com")}/insights/${a.slug}`} title={a.title} /></div>
             </div>
             <div className="bg-navy-950 p-6">
               <h2 className="font-condensed text-sm font-semibold uppercase tracking-widest text-white">Our engineering services</h2>

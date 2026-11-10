@@ -30,8 +30,8 @@ export default async function ServiceDetail({ params }: { params: { slug: string
       {/* HERO */}
       <section className="relative bg-navy-950 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imgFor(params.slug, db?.image)} alt={rich.name} className="absolute inset-0 h-full w-full object-cover opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-transparent" />
+        <img src={imgFor(params.slug, db?.image)} alt={rich.name} className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/55 to-transparent" />
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-14">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: rich.name }]} />
           <h1 className="font-condensed mt-4 text-4xl md:text-5xl font-semibold uppercase text-white">{rich.name}</h1>
