@@ -2,6 +2,7 @@ export const siteConfig = {
   name: "Ventron Mechanical Systems Ltd",
   tagline: "Your Vision, Our Engineering.",
   email: "info@ventronltd.co.ke",
+  linkedin: "https://linkedin.com/company/ventron-mechanical-systems",
   phone: "+254 180 707 774",
   phoneHref: "tel:+254180707774",
   whatsapp: "https://wa.me/254180707774",

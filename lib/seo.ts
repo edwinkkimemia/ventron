@@ -32,5 +32,6 @@ export function organizationSchema() {
     telephone: "+254180707774",
     address: { "@type": "PostalAddress", addressLocality: "Nairobi", addressCountry: "KE" },
     areaServed: ["Kenya", "East Africa"],
+    sameAs: ["https://linkedin.com/company/ventron-mechanical-systems"],
   };
 }

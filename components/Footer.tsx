@@ -36,7 +36,7 @@ export default function Footer() {
             <li className="flex gap-2"><MapPin size={16} className="mt-0.5 shrink-0" /> {siteConfig.address}</li>
             <li className="flex gap-2"><Mail size={16} className="mt-0.5 shrink-0" /> <a href={`mailto:${siteConfig.email}`} className="hover:text-white">{siteConfig.email}</a></li>
             <li className="flex gap-2"><Phone size={16} className="mt-0.5 shrink-0" /> <a href={siteConfig.phoneHref} className="hover:text-white">{siteConfig.phone}</a></li>
-            <li><a href="#" className="inline-flex items-center gap-2 hover:text-white"><Linkedin size={16} /> LinkedIn</a></li>
+            <li><a href={siteConfig.linkedin} target="_blank" rel="noopener" className="inline-flex items-center gap-2 hover:text-white"><Linkedin size={16} /> LinkedIn</a></li>
           </ul>
           <Link href="/quote" className="mt-5 inline-block bg-accent hover:bg-accent-dark text-white text-xs font-bold uppercase tracking-widest px-5 py-3">Discuss Your Project</Link>
         </div>
