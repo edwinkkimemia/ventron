@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "Ventron Mechanical Systems Ltd",
   tagline: "Your Vision, Our Engineering.",
-  email: "info@ventronltd.com",
-  phone: "0180707774",
-  phoneHref: "tel:+44180707774",
-  whatsapp: "https://wa.me/441807077774",
+  email: "info@ventronltd.co.ke",
+  phone: "+254 180 707 774",
+  phoneHref: "tel:+254180707774",
+  whatsapp: "https://wa.me/254180707774",
   address: "Nairobi, Kenya",
   siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/$/, "") || "https://ventronltd.co.ke",
   nav: [

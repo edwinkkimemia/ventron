@@ -28,8 +28,8 @@ export function organizationSchema() {
     name: "Ventron Mechanical Systems Ltd",
     slogan: "Your Vision, Our Engineering.",
     url: SITE_URL,
-    email: "info@ventronltd.com",
-    telephone: "+44180707774",
+    email: "info@ventronltd.co.ke",
+    telephone: "+254180707774",
     address: { "@type": "PostalAddress", addressLocality: "Nairobi", addressCountry: "KE" },
     areaServed: ["Kenya", "East Africa"],
   };

@@ -56,7 +56,7 @@ function LoginFormInner() {
         <h1 className="font-condensed mt-4 text-2xl font-semibold uppercase text-navy-900">Admin sign in</h1>
         <p className="text-xs text-steel-500 mt-1">Ventron Mechanical Systems Ltd — restricted area</p>
         <label className="block mt-5 text-[11px] font-bold uppercase tracking-widest text-steel-500">Email</label>
-        <input name="email" type="email" required autoComplete="username" placeholder="you@ventronltd.com" className="mt-1.5 w-full border border-steel-300 px-3.5 py-2.5 text-sm outline-none focus:border-navy-900" />
+        <input name="email" type="email" required autoComplete="username" placeholder="you@ventronltd.co.ke" className="mt-1.5 w-full border border-steel-300 px-3.5 py-2.5 text-sm outline-none focus:border-navy-900" />
         <label className="block mt-3 text-[11px] font-bold uppercase tracking-widest text-steel-500">Password</label>
         <div className="relative mt-1.5">
           <input name="password" type={show ? "text" : "password"} required autoComplete="current-password" placeholder="••••••••" className="w-full border border-steel-300 px-3.5 py-2.5 pr-11 text-sm outline-none focus:border-navy-900" />

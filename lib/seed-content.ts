@@ -136,8 +136,8 @@ export async function seedDatabase() {
   const settings: Record<string, string> = {
     hero_title: "Oil & Gas, LPG and Industrial Engineering Across East Africa",
     hero_subtitle: "Ventron Mechanical Systems Ltd delivers engineering and procurement for oil & gas terminals, LPG facilities, pipelines, firewater systems and industrial plants across Kenya and East Africa.",
-    contact_email: "info@ventronltd.com",
-    contact_phone: "0180707774",
+    contact_email: "info@ventronltd.co.ke",
+    contact_phone: "+254 180 707 774",
     contact_address: "Nairobi, Kenya",
     cta_title: "Have an Engineering Challenge?",
     cta_text: "Talk to our engineering team about your project requirements.",

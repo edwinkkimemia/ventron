@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       <h2>Data we collect</h2>
       <ul><li>Contact and company details from forms</li><li>Project descriptions and attachments</li><li>Job application materials</li></ul>
       <h2>Your rights</h2>
-      <p>Request access, correction or deletion of your data at info@ventronltd.com.</p>
+      <p>Request access, correction or deletion of your data at info@ventronltd.co.ke.</p>
     </div></section>
   );
 }
